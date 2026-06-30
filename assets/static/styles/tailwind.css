@@ -1,0 +1,396 @@
+/* =========================================================================
+   Screenly On This Day — "The Record"
+   One historical moment, set like a page in an archive logbook: today's date
+   pressed in as a cinnabar stamp, the year it happened standing as the hero in
+   a light Newsreader serif, and the source article mounted beside it like a
+   tipped-in photographic plate. JetBrains Mono is the catalog "record" voice
+   for labels, the stamp, the caption, and the Wikipedia credit. The stamp is
+   the one bold thing; everything else stays quiet. Tuned for unattended signage
+   — legible at distance, no interaction, both orientations.
+   ========================================================================= */
+
+@import 'tailwindcss';
+
+/* Design tokens — also generate utilities (bg-bone, text-cinnabar, font-serif…). */
+@theme {
+  --color-bone: #e8e9e3; /* cool off-white ground — not warm cream */
+  --color-ink: #191815; /* warm near-black */
+  --color-cinnabar: #c5341e; /* seal-ink red — used only for the stamp + ticks */
+  --color-slate: #5a5c57; /* muted utility text */
+  --color-rule: #cfcbc0; /* hairlines */
+  --color-mat: #f4f2ec; /* photographic mat behind the article image */
+  --font-serif: 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+}
+
+/* Webfonts: self-hosted, vendored from Bun-managed @fontsource (sync-fonts.js).
+   Newsreader "standard" axis = optical-size + weight. */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/static/fonts/newsreader-latin-standard-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('/static/fonts/newsreader-latin-standard-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('/static/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
+}
+
+@layer base {
+  /* One fluid root drives the whole scale; vw+vh keeps it orientation-neutral
+     so portrait and landscape resolve to the same type size. Children size in
+     rem, so the layout scales cleanly from 480px → 4K with no breakpoints. */
+  :root {
+    font-size: clamp(16px, 0.95vw + 0.95vh, 52px);
+  }
+
+  body {
+    min-height: 100svh;
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer components {
+  .stage {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 100svh;
+    padding: clamp(1.5rem, 5vmin, 3.75rem);
+    gap: clamp(1.25rem, 3vmin, 2.5rem);
+    overflow: hidden;
+  }
+
+  /* The page: image plate + entry. Centered as a block in the upper region. */
+  .record {
+    align-self: center;
+    justify-self: center;
+    display: grid;
+    gap: clamp(1.6rem, 4vmin, 3rem);
+    width: 100%;
+    max-width: 46rem;
+    justify-items: center;
+  }
+
+  /* Side-by-side only when there's room and an image to show. */
+  @media (orientation: landscape) {
+    .record {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+      align-items: center;
+      justify-items: stretch;
+      gap: clamp(2rem, 5vw, 4.5rem);
+      max-width: 72rem;
+    }
+  }
+
+  /* No usable photo → collapse to a single centered frontispiece column. */
+  .record:has(.plate[data-state='empty']) {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 46rem;
+  }
+
+  /* --- The tipped-in photographic plate ----------------------------------- */
+  .plate {
+    margin: 0;
+    background-color: var(--color-mat);
+    padding: clamp(0.5rem, 1.4vmin, 1rem);
+    border: 1px solid var(--color-rule);
+    box-shadow: 0 clamp(0.6rem, 2vmin, 1.4rem) clamp(1.4rem, 5vmin, 3.4rem) rgba(25, 24, 21, 0.16);
+  }
+
+  @media (orientation: landscape) {
+    .plate {
+      justify-self: end;
+      width: 100%;
+      max-width: 34rem;
+    }
+  }
+
+  /* Hidden entirely when the entry has no image (text-only fallback). */
+  .plate[data-state='empty'] {
+    display: none;
+  }
+
+  .plate__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background-color: var(--color-rule);
+    /* Settle arbitrary article photos onto the warm mat without flattening them. */
+    filter: saturate(0.96) contrast(1.02);
+  }
+
+  .plate__caption {
+    margin-top: clamp(0.5rem, 1.4vmin, 0.85rem);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    color: var(--color-slate);
+  }
+  .plate__caption::before {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-right: 0.55em;
+    background-color: var(--color-cinnabar);
+  }
+
+  /* --- The entry ---------------------------------------------------------- */
+  .entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  @media (orientation: landscape) {
+    .entry {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+  /* Frontispiece (no image) is always centered, regardless of orientation. */
+  .record:has(.plate[data-state='empty']) .entry {
+    align-items: center;
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  .eyebrow__tick {
+    width: 1.1em;
+    height: 2px;
+    background-color: var(--color-cinnabar);
+  }
+
+  /* The signature: today's calendar date pressed in like a received stamp. */
+  .stamp {
+    margin-top: clamp(1rem, 2.6vmin, 1.6rem);
+    display: inline-grid;
+    justify-items: center;
+    gap: 0.18em;
+    padding: 0.42em 0.62em 0.5em;
+    border: 2px solid var(--color-cinnabar);
+    border-radius: 4px;
+    color: var(--color-cinnabar);
+    line-height: 1;
+    transform: rotate(-3deg);
+    transform-origin: center;
+  }
+  .stamp__month {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    /* Optical re-centering for the trailing letter-spacing. */
+    padding-left: 0.34em;
+  }
+  .stamp__day {
+    padding-top: 0.2em;
+    border-top: 1.5px solid var(--color-cinnabar);
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 1.55rem;
+    font-weight: 800;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* The hero: the year it happened. */
+  .entry__year {
+    margin-top: clamp(0.9rem, 2.4vmin, 1.5rem);
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+    font-weight: 380;
+    font-size: 7rem;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  .entry__distance {
+    margin-top: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  .entry__distance:empty {
+    display: none;
+  }
+
+  .entry__text {
+    margin-top: clamp(1.1rem, 2.8vmin, 1.7rem);
+    max-width: 19em;
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1.85rem;
+    line-height: 1.32;
+    letter-spacing: -0.003em;
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  .entry__source {
+    margin-top: clamp(1.1rem, 2.6vmin, 1.6rem);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  .entry__source a {
+    color: var(--color-cinnabar);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  /* --- Colophon (pinned bottom) ------------------------------------------- */
+  .colophon {
+    align-self: end;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .colophon__credit {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-slate);
+  }
+  .colophon__credit a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .brand {
+    display: block;
+    flex-shrink: 0;
+    opacity: 0.45;
+    transition: opacity 200ms ease;
+    border-radius: 4px;
+    outline-offset: 6px;
+  }
+  .brand:hover,
+  .brand:focus-visible {
+    opacity: 0.8;
+  }
+  .brand img {
+    display: block;
+    width: auto;
+    height: clamp(12px, 1.15rem, 24px);
+    /* Logo art ships white for dark siblings; render it as muted ink on bone. */
+    filter: brightness(0);
+  }
+
+  /* Short screens (Raspberry Pi Touch Display and the like) are tight on height:
+     compact the scale so the year, event, and the required Wikipedia credit all
+     stay above the fold. Taller signage (720p/1080p/4K) keeps the full scale. */
+  @media (max-height: 540px) {
+    .stage {
+      padding: clamp(0.9rem, 4vmin, 2rem);
+      gap: 0.75rem;
+    }
+    .stamp {
+      margin-top: 0.7rem;
+    }
+    .entry__year {
+      margin-top: 0.5rem;
+      font-size: 4.6rem;
+    }
+    .entry__distance {
+      margin-top: 0.45rem;
+    }
+    .entry__text {
+      margin-top: 0.8rem;
+      font-size: 1.5rem;
+    }
+    .entry__source {
+      margin-top: 0.8rem;
+    }
+    .plate {
+      max-width: 22rem;
+    }
+  }
+}
+
+@layer base {
+  /* One orchestrated entrance when today's live entry is rendered, gated for
+     reduced motion. Keyed off the ready flag so a no-JS screen stays visible. */
+  @media (prefers-reduced-motion: no-preference) {
+    :root[data-state='ready'] .entry {
+      animation: rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    :root[data-state='ready'] .plate {
+      animation: rise 800ms 80ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    :root[data-state='ready'] .stamp {
+      animation: stamp-press 620ms 140ms cubic-bezier(0.2, 0.8, 0.25, 1) both;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.7rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* The stamp lands: rotates and presses down to its resting angle. */
+  @keyframes stamp-press {
+    from {
+      opacity: 0;
+      transform: rotate(-9deg) scale(1.14);
+    }
+    to {
+      opacity: 1;
+      transform: rotate(-3deg) scale(1);
+    }
+  }
+}

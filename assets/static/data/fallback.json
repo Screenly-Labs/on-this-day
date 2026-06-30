@@ -1,0 +1,86 @@
+[
+  {
+    "year": 1969,
+    "text": "Apollo 11 lands the first humans on the Moon.",
+    "title": "Apollo 11",
+    "url": "https://en.wikipedia.org/wiki/Apollo_11"
+  },
+  {
+    "year": 1989,
+    "text": "The Berlin Wall falls, opening the border between East and West Germany.",
+    "title": "Berlin Wall",
+    "url": "https://en.wikipedia.org/wiki/Berlin_Wall"
+  },
+  {
+    "year": 1903,
+    "text": "The Wright brothers make the first powered, controlled flight of an aeroplane.",
+    "title": "Wright Flyer",
+    "url": "https://en.wikipedia.org/wiki/Wright_Flyer"
+  },
+  {
+    "year": 1928,
+    "text": "Alexander Fleming discovers penicillin, opening the era of antibiotics.",
+    "title": "Penicillin",
+    "url": "https://en.wikipedia.org/wiki/Penicillin"
+  },
+  {
+    "year": 1440,
+    "text": "Johannes Gutenberg introduces movable-type printing to Europe.",
+    "title": "Printing press",
+    "url": "https://en.wikipedia.org/wiki/Printing_press"
+  },
+  {
+    "year": 1989,
+    "text": "Tim Berners-Lee proposes the World Wide Web at CERN.",
+    "title": "World Wide Web",
+    "url": "https://en.wikipedia.org/wiki/World_Wide_Web"
+  },
+  {
+    "year": 1953,
+    "text": "The double-helix structure of DNA is first described.",
+    "title": "Nucleic acid double helix",
+    "url": "https://en.wikipedia.org/wiki/Nucleic_acid_double_helix"
+  },
+  {
+    "year": 1789,
+    "text": "The storming of the Bastille ignites the French Revolution.",
+    "title": "Storming of the Bastille",
+    "url": "https://en.wikipedia.org/wiki/Storming_of_the_Bastille"
+  },
+  {
+    "year": 1865,
+    "text": "The Thirteenth Amendment abolishes slavery throughout the United States.",
+    "title": "Thirteenth Amendment to the United States Constitution",
+    "url": "https://en.wikipedia.org/wiki/Thirteenth_Amendment_to_the_United_States_Constitution"
+  },
+  {
+    "year": 1990,
+    "text": "The Hubble Space Telescope is launched into low Earth orbit.",
+    "title": "Hubble Space Telescope",
+    "url": "https://en.wikipedia.org/wiki/Hubble_Space_Telescope"
+  },
+  {
+    "year": 1215,
+    "text": "Magna Carta is sealed, limiting the power of the English crown.",
+    "title": "Magna Carta",
+    "url": "https://en.wikipedia.org/wiki/Magna_Carta"
+  },
+  {
+    "year": 1957,
+    "text": "The Soviet Union launches Sputnik 1, the first artificial satellite.",
+    "title": "Sputnik 1",
+    "url": "https://en.wikipedia.org/wiki/Sputnik_1"
+  },
+  {
+    "year": 1955,
+    "text": "Rosa Parks refuses to give up her bus seat in Montgomery, Alabama.",
+    "title": "Rosa Parks",
+    "url": "https://en.wikipedia.org/wiki/Rosa_Parks"
+  },
+  {
+    "year": 1945,
+    "text": "The United Nations is founded in the aftermath of the Second World War.",
+    "title": "United Nations",
+    "url": "https://en.wikipedia.org/wiki/United_Nations"
+  }
+]
