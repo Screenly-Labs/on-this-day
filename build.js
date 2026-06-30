@@ -16,7 +16,7 @@ import { rm, mkdir, cp, readdir, readFile, writeFile } from 'node:fs/promises'
 import { run as syncFonts } from './sync-fonts.js'
 
 const DIST = 'dist'
-const DOMAIN = 'onthisday.srly.io'
+const DOMAIN = 'on-this-day.srly.io'
 
 // 1. Vendor the Bun-managed webfonts into ./assets before copying.
 await syncFonts()

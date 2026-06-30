@@ -8,7 +8,7 @@ mounted beside it like a tipped-in photographic plate.
 
 ![Screenly On This Day App](docs/screenshot.png)
 
-Live: **https://onthisday.srly.io**
+Live: **https://on-this-day.srly.io**
 
 Part of the Screenly signage family alongside the [quotes](../quotes),
 [weather](../weather-app), and [clock](../clock-app) apps. Like `quotes`, this one
@@ -86,9 +86,9 @@ builds on every PR.
 
 One-time setup (outside this repo):
 
-1. **DNS:** `CNAME` record `onthisday.srly.io → screenly-labs.github.io`.
+1. **DNS:** `CNAME` record `on-this-day.srly.io → screenly-labs.github.io`.
 2. **Repo → Settings → Pages:** Source = "GitHub Actions"; set the custom domain
-   to `onthisday.srly.io` and enable "Enforce HTTPS" once the certificate
+   to `on-this-day.srly.io` and enable "Enforce HTTPS" once the certificate
    provisions.
 
 ## License
