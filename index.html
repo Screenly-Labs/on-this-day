@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>On This Day</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A full-screen historical moment for digital signage — one notable event from this day in history, drawn from Wikipedia."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4.5' y='6.5' width='23' height='21' rx='2.5' fill='none' stroke='%23c5341e' stroke-width='2.5'/%3E%3Cline x1='4.5' y1='13' x2='27.5' y2='13' stroke='%23c5341e' stroke-width='2.5'/%3E%3Cline x1='11' y1='3.5' x2='11' y2='9' stroke='%23c5341e' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='21' y1='3.5' x2='21' y2='9' stroke='%23c5341e' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <link
+      rel="preload"
+      href="/static/fonts/newsreader-latin-standard-normal.woff2?v=__ASSET_VERSION__"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/static/fonts/jetbrains-mono-latin-wght-normal.woff2?v=__ASSET_VERSION__"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/static/styles/main.css?v=__ASSET_VERSION__" />
+    <script src="/static/js/main.js?v=__ASSET_VERSION__" defer></script>
+  </head>
+  <body>
+    <main class="stage">
+      <!-- Visible content is seeded with a real event so the screen is never
+           blank pre-JS; main.ts replaces it with today's live entry. -->
+      <h1 class="sr-only">On this day in history — <span id="otd-date">October 29</span></h1>
+
+      <article class="record">
+        <figure class="plate" id="otd-figure" data-state="empty">
+          <img class="plate__img" id="otd-image" alt="" />
+          <figcaption class="plate__caption" id="otd-caption"></figcaption>
+        </figure>
+
+        <div class="entry">
+          <p class="eyebrow">
+            <span class="eyebrow__tick" aria-hidden="true"></span>On this day
+          </p>
+
+          <div class="stamp" aria-hidden="true">
+            <span class="stamp__month" id="otd-stamp-month">OCT</span>
+            <span class="stamp__day" id="otd-stamp-day">29</span>
+          </div>
+
+          <p class="entry__year"><span id="otd-year">1969</span></p>
+          <p class="entry__distance" id="otd-distance">57 years ago</p>
+
+          <p class="entry__text" id="otd-text">
+            The first message is sent over ARPANET, the forerunner of the Internet.
+          </p>
+
+          <p class="entry__source">
+            Source &middot;
+            <a
+              id="otd-source"
+              href="https://en.wikipedia.org/wiki/ARPANET"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Wikipedia</a
+            >
+          </p>
+        </div>
+      </article>
+
+      <footer class="colophon">
+        <p class="colophon__credit">
+          Events from
+          <a
+            href="https://en.wikipedia.org/wiki/Wikipedia:Selected_anniversaries"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Wikipedia</a
+          >, CC&nbsp;BY-SA
+        </p>
+        <a
+          class="brand"
+          href="https://www.screenly.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Screenly — opens in a new tab"
+        >
+          <img src="/static/images/screenly-logo.svg?v=__ASSET_VERSION__" alt="Screenly" />
+        </a>
+      </footer>
+    </main>
+  </body>
+</html>
