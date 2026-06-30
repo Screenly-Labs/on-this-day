@@ -9,6 +9,8 @@
 // italic) for the year and the event narrative; JetBrains Mono for the catalog
 // "record" voice — the stamped date, eyebrow, photo caption, and source credit.
 
+import { rm } from 'node:fs/promises'
+
 const FONTS = [
   '@fontsource-variable/newsreader/files/newsreader-latin-standard-normal.woff2',
   '@fontsource-variable/newsreader/files/newsreader-latin-standard-italic.woff2',
@@ -18,6 +20,10 @@ const DEST_DIR = 'assets/static/fonts'
 
 export const run = async () => {
   let count = 0
+
+  // Clear the vendored dir first so a renamed/removed font can't linger and get
+  // shipped — this dir is gitignored and rebuilt from @fontsource every time.
+  await rm(DEST_DIR, { recursive: true, force: true })
 
   for (const rel of FONTS) {
     const file = rel.split('/').pop()

@@ -94,6 +94,9 @@ describe('yearsAgo', () => {
     expect(yearsAgo(1969, now)).toBe(57)
     expect(yearsAgo(1, now)).toBe(2025)
   })
+  test('accounts for the missing year 0 with BCE years', () => {
+    expect(yearsAgo(-44, now)).toBe(2069) // 44 BC → 2026, not 2070
+  })
   test('returns null for this year or a future/invalid year', () => {
     expect(yearsAgo(2026, now)).toBeNull()
     expect(yearsAgo(2030, now)).toBeNull()
@@ -177,6 +180,28 @@ describe('parseFeed', () => {
 
   test('leaves imageUrl undefined when no thumbnail is present', () => {
     expect(events[1].imageUrl).toBeUndefined()
+  })
+
+  test('keeps the original thumbnail when no width cap is known (no over-upscale)', () => {
+    const src =
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/T.jpg/330px-T.jpg'
+    const parsed = parseFeed({
+      selected: [
+        {
+          year: 2000,
+          text: 'No width metadata on the thumbnail.',
+          pages: [
+            {
+              normalizedtitle: 'T',
+              thumbnail: { source: src },
+              content_urls: { desktop: { page: 'https://en.wikipedia.org/wiki/T' } }
+            }
+          ]
+        }
+      ]
+    })
+    expect(parsed).toHaveLength(1)
+    expect(parsed[0].imageUrl).toBe(src) // unchanged — not blindly upscaled to 800px
   })
 
   test('returns an empty array for junk input', () => {

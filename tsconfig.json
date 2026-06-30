@@ -15,5 +15,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["assets/static/js/**/*.ts", "scripts/**/*.ts", "test/**/*.ts"]
+  "include": ["assets/static/js/**/*.ts", "test/**/*.ts"]
 }

@@ -12,7 +12,7 @@
 //   6. write CNAME for the custom domain
 // dist/ is gitignored; CI uploads it as the Pages artifact.
 
-import { rm, mkdir, cp, readFile, writeFile } from 'node:fs/promises'
+import { rm, mkdir, cp, readdir, readFile, writeFile } from 'node:fs/promises'
 import { run as syncFonts } from './sync-fonts.js'
 
 const DIST = 'dist'
@@ -64,13 +64,20 @@ if (!js.success) {
 await Bun.write(`${DIST}/static/js/main.js`, await js.outputs[0].text())
 console.log(`✓ JS: ${DIST}/static/js/main.js`)
 
-// 5. Cache-busting: hash the built JS + CSS + fallback data so the token changes
-// exactly when shipped content changes, then stamp it into the page's asset URLs.
-const fingerprint = await Promise.all([
-  readFile(`${DIST}/static/js/main.js`),
-  readFile(`${DIST}/static/styles/main.css`),
-  readFile(`${DIST}/static/data/fallback.json`)
-])
+// 5. Cache-busting: hash every asset whose URL carries the ?v= token — the JS,
+// CSS, fonts and logo — so the token changes exactly when any shipped, stamped
+// asset changes, then stamp it into the page's asset URLs. (fallback data is
+// inlined into main.js, so hashing the JS already covers it.)
+const fonts = (await readdir(`${DIST}/static/fonts`))
+  .sort()
+  .map((file) => `${DIST}/static/fonts/${file}`)
+const fingerprintPaths = [
+  `${DIST}/static/js/main.js`,
+  `${DIST}/static/styles/main.css`,
+  `${DIST}/static/images/screenly-logo.svg`,
+  ...fonts
+]
+const fingerprint = await Promise.all(fingerprintPaths.map((path) => readFile(path)))
 const hasher = new Bun.CryptoHasher('sha256')
 for (const buf of fingerprint) hasher.update(buf)
 const version = hasher.digest('hex').slice(0, 10)

@@ -4,8 +4,8 @@
 //
 // Flow: read today's local date → fetch the Wikipedia "On this day" feed → pick
 // an event (preferring one with an image) → render. If the live fetch fails
-// (offline signage, API hiccup), fall back to the small bundled dataset, and
-// finally to one inlined event, so the screen is never blank.
+// (offline signage, API hiccup), fall back to the dataset bundled into this
+// script, and finally to one inlined event, so the screen is never blank.
 
 import {
   type OnThisDayEvent,
@@ -19,12 +19,15 @@ import {
   selectEvent,
   yearsAgo
 } from './events'
+// Inlined into the bundle at build time, so the offline fallback needs no fetch
+// and works on a network-isolated screen.
+import fallbackEvents from '../data/fallback.json'
 
 const FEED_BASE = 'https://en.wikipedia.org/api/rest_v1/feed/onthisday/selected'
-const FALLBACK_URL = '/static/data/fallback.json'
 const FETCH_TIMEOUT_MS = 8000
 
-// Last-resort event if even the bundled fallback can't be read.
+// Last-resort event if the bundled dataset is somehow empty/invalid. Keep this
+// in sync with the inline seed in index.html (the no-JS / pre-fetch screen).
 const INLINE_FALLBACK: OnThisDayEvent = {
   year: 1969,
   text: 'The first message is sent over ARPANET, the forerunner of the Internet.',
@@ -78,12 +81,12 @@ const render = (event: OnThisDayEvent, today: Date): void => {
   document.documentElement.dataset.state = 'ready'
 }
 
-const fetchJson = async (url: string): Promise<unknown> => {
+const fetchFeed = async (url: string): Promise<unknown> => {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
-    // no-cache: revalidate so the day's events aren't masked by a stale copy,
-    // while still serving from cache when the network is unreachable.
+    // no-cache: revalidate so a new day's events aren't masked by a stale copy.
+    // When the network is unreachable this rejects, and we fall back below.
     const res = await fetch(url, { cache: 'no-cache', signal: controller.signal })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     return await res.json()
@@ -92,28 +95,25 @@ const fetchJson = async (url: string): Promise<unknown> => {
   }
 }
 
-const loadFromFallback = async (): Promise<OnThisDayEvent> => {
-  try {
-    const data = await fetchJson(FALLBACK_URL)
-    const events = Array.isArray(data) ? data.filter(isEvent) : []
-    if (events.length === 0) throw new Error('no valid events in fallback')
-    return events[pickRandomIndex(events.length)]
-  } catch (error) {
-    console.error('On This Day: using inline fallback —', error)
-    return INLINE_FALLBACK
-  }
+// Picks from the dataset bundled into this script — no network, so it works on
+// an offline screen. Falls back to the single inline event only if that data is
+// somehow unusable.
+const pickFromFallback = (): OnThisDayEvent => {
+  const events = Array.isArray(fallbackEvents) ? fallbackEvents.filter(isEvent) : []
+  if (events.length === 0) return INLINE_FALLBACK
+  return events[pickRandomIndex(events.length)]
 }
 
 const loadEvent = async (today: Date): Promise<OnThisDayEvent> => {
   const { mm, dd } = monthDay(today)
   try {
-    const data = await fetchJson(`${FEED_BASE}/${mm}/${dd}`)
+    const data = await fetchFeed(`${FEED_BASE}/${mm}/${dd}`)
     const event = selectEvent(parseFeed(data))
     if (!event) throw new Error('no usable events in feed')
     return event
   } catch (error) {
-    console.error('On This Day: live feed unavailable, falling back —', error)
-    return loadFromFallback()
+    console.error('On This Day: live feed unavailable, using bundled fallback —', error)
+    return pickFromFallback()
   }
 }
 

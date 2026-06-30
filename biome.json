@@ -8,7 +8,6 @@
   "files": {
     "includes": [
       "assets/static/js/**/*.ts",
-      "scripts/**/*.ts",
       "test/**/*.ts",
       "*.js",
       "package.json",

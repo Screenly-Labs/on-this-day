@@ -89,7 +89,9 @@ export const formatYear = (year: number): string => (year < 0 ? `${-year} BC` : 
 // null when it wouldn't read sensibly (this year, or a future/invalid year).
 export const yearsAgo = (year: number, now: Date): number | null => {
   if (!Number.isFinite(year)) return null
-  const diff = now.getFullYear() - year
+  // The feed (and the Gregorian calendar) has no year 0, so a BCE year is one
+  // closer than the raw subtraction: 44 BC → 2026 is 2069 years, not 2070.
+  const diff = now.getFullYear() - year - (year < 0 ? 1 : 0)
   return diff > 0 ? diff : null
 }
 
@@ -160,10 +162,10 @@ export const parseFeed = (data: unknown): OnThisDayEvent[] => {
       (typeof original?.width === 'number' && original.width) ||
       (typeof thumb?.width === 'number' && thumb.width) ||
       undefined
-    const imageUrl =
-      typeof thumb?.source === 'string'
-        ? upscaleThumbnail(thumb.source, 800, maxWidth)
-        : undefined
+    const source = typeof thumb?.source === 'string' ? thumb.source : undefined
+    // Only upscale when we know a safe cap; without one, keep the given
+    // thumbnail rather than risk an over-upscale that 400s and hides the image.
+    const imageUrl = source && maxWidth ? upscaleThumbnail(source, 800, maxWidth) : source
 
     events.push({ year: e.year, text: e.text, title, url, imageUrl })
   }
