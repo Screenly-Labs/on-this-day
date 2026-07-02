@@ -55,6 +55,14 @@ absolutely as `/static/...`.
 - `assets/static/data/fallback.json` — ~14 famous, fact-checked events shown only
   when the live feed is unreachable. Each links a real Wikipedia article; every
   URL is verified. Text-only (no images offline).
+- `.well-known/signage-app.json` — the [signage-app manifest](https://github.com/Screenly-Labs/app-store/blob/master/docs/app-manifest.md)
+  the app store and players read to render/launch this app. On This Day takes no
+  settings and is single-shot (one event per load, no rotation or refresh), so
+  the manifest omits `playback`, `settings`, and a launch `template` — `baseUrl`
+  alone is the launch URL. `build.js` copies it to `dist/.well-known/` unchanged;
+  `test/manifest.test.ts` guards its shape. Served at the site-root well-known
+  path with `application/json` + `Access-Control-Allow-Origin: *` (GitHub Pages
+  defaults).
 
 `build.js` builds into `dist/` **without mutating sources**: vendor fonts → copy
 `index.html` + static assets → compile+minify Tailwind → bundle+minify the TS →
