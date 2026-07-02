@@ -29,6 +29,10 @@ await cp('assets/static/fonts', `${DIST}/static/fonts`, { recursive: true })
 await cp('assets/static/images', `${DIST}/static/images`, { recursive: true })
 await cp('assets/static/data', `${DIST}/static/data`, { recursive: true })
 await cp('index.html', `${DIST}/index.html`)
+// The signage-app manifest lives at the well-known site-root path the app store
+// and players fetch (see docs/app-manifest.md); GitHub Pages serves it as
+// application/json with Access-Control-Allow-Origin:* out of the box.
+await cp('.well-known', `${DIST}/.well-known`, { recursive: true })
 
 // 3. Tailwind: compile + minify the source CSS to the served stylesheet.
 const tailwind = Bun.spawn(
