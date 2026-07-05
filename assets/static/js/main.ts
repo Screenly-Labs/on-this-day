@@ -117,7 +117,17 @@ const loadEvent = async (today: Date): Promise<OnThisDayEvent> => {
   }
 }
 
+// On a Screenly player the viewer is already a Screenly customer, so the
+// promotional Screenly badge is removed. The 'screenly-viewer' token in the
+// user agent marks these devices; every other browser keeps the badge.
+const removeScreenlyBranding = (): void => {
+  if (navigator.userAgent.includes('screenly-viewer')) {
+    document.querySelector('.brand')?.remove()
+  }
+}
+
 const init = (): void => {
+  removeScreenlyBranding()
   const today = new Date()
   loadEvent(today).then((event) => render(event, today))
 }
