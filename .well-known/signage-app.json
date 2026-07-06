@@ -2,7 +2,7 @@
   "manifestVersion": "1",
   "id": "on-this-day",
   "name": "On This Day",
-  "description": "A full-screen historical moment for digital signage — one notable event from this day in history, drawn live from Wikipedia, with an offline fallback so the screen is never blank.",
+  "description": "A full-screen historical moment for digital signage: one notable event from this day in history, drawn live from Wikipedia, with an offline fallback so the screen is never blank.",
   "summary": "A notable moment from this day in history.",
   "vendor": "Screenly",
   "tags": ["History"],
