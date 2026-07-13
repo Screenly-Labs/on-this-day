@@ -10,10 +10,14 @@
    ========================================================================= */
 
 @import 'tailwindcss';
-/* Shared base (the degraded-mode kill-switch) from @screenly-labs/signage-kit.
-   The app's own @theme + component styles below layer on top; the design identity
-   stays here, per-app. */
+/* Shared base (fluid root + degraded-mode kill-switch), the canonical @font-face
+   set, and the standardized footer badge from @screenly-labs/signage-kit. The
+   app's own @theme + component styles below layer on top; the design identity
+   (Newsreader/JetBrains voice, the cinnabar stamp, the record layout) stays here.
+   No stage.css — "The Record" uses a named grid, not the centering frame. */
 @import '@screenly-labs/signage-kit/styles/preset.css';
+@import '@screenly-labs/signage-kit/styles/fonts.css';
+@import '@screenly-labs/signage-kit/styles/brand.css';
 
 /* Design tokens — also generate utilities (bg-bone, text-cinnabar, font-serif…). */
 @theme {
@@ -27,36 +31,14 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
 }
 
-/* Webfonts: self-hosted, vendored from Bun-managed @fontsource (sync-fonts.js).
-   Newsreader "standard" axis = optical-size + weight. */
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 200 800;
-  font-display: swap;
-  src: url('/static/fonts/newsreader-latin-standard-normal.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 200 800;
-  font-display: swap;
-  src: url('/static/fonts/newsreader-latin-standard-italic.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 100 800;
-  font-display: swap;
-  src: url('/static/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2');
-}
-
 @layer base {
-  /* One fluid root drives the whole scale; vw+vh keeps it orientation-neutral
-     so portrait and landscape resolve to the same type size. Children size in
-     rem, so the layout scales cleanly from 480px → 4K with no breakpoints. */
+  /* Tune the kit's fluid root (clamp of vw+vh) for this design; the clamp lives
+     in the preset. Children size in rem, so the layout scales cleanly from
+     480px → 4K, both orientations, with no breakpoints. */
   :root {
-    font-size: clamp(16px, 0.95vw + 0.95vh, 52px);
+    --root-min: 16px;
+    --root-gain: 0.95;
+    --root-max: 52px;
   }
 
   body {
@@ -311,23 +293,10 @@
     text-underline-offset: 2px;
   }
 
-  .brand {
-    display: block;
-    flex-shrink: 0;
-    opacity: 0.45;
-    transition: opacity 200ms ease;
-    border-radius: 4px;
-    outline-offset: 6px;
-  }
-  .brand:hover,
-  .brand:focus-visible {
-    opacity: 0.8;
-  }
+  /* The badge itself is the kit's standardized fixed corner .brand (brand.css).
+     Only the logo tint is app-specific: the art ships white for dark siblings,
+     so on this light "bone" ground render it as muted ink. */
   .brand img {
-    display: block;
-    width: auto;
-    height: clamp(12px, 1.15rem, 24px);
-    /* Logo art ships white for dark siblings; render it as muted ink on bone. */
     filter: brightness(0);
   }
 
