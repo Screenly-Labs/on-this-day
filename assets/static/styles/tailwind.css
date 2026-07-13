@@ -56,6 +56,7 @@
   }
 
   body {
+    min-height: 100vh; /* fallback for engines below the svh floor (~2018 players) */
     min-height: 100svh;
     background-color: var(--color-bone);
     color: var(--color-ink);
@@ -70,6 +71,7 @@
     position: relative;
     display: grid;
     grid-template-rows: 1fr auto;
+    min-height: 100vh; /* fallback for engines below the svh floor (~2018 players) */
     min-height: 100svh;
     padding: clamp(1.5rem, 5vmin, 3.75rem);
     gap: clamp(1.25rem, 3vmin, 2.5rem);
@@ -393,4 +395,17 @@
       transform: rotate(-3deg) scale(1);
     }
   }
+}
+
+/* =========================================================================
+   Degraded mode — old/weak signage players (html.legacy set by the inline gate
+   in index.html). Assume the device can't afford animation; drop it entirely.
+   Content stays legible without the entrance (it only animates the reveal).
+   ========================================================================= */
+html.legacy *,
+html.legacy *::before,
+html.legacy *::after {
+  animation: none !important;
+  transition: none !important;
+  will-change: auto !important;
 }
