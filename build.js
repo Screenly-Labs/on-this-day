@@ -21,8 +21,9 @@ const DOMAIN = 'on-this-day.srly.io'
 
 // The support floor, the CSS down-leveling recipe, the JS bundler, and the inline
 // degraded-mode gate all come from @screenly-labs/signage-kit. This file only
-// orchestrates the app-specific steps. See the degraded-mode notes in
-// index.html / tailwind.css.
+// orchestrates the app-specific steps: the gate is injected into index.html at
+// build time (step 2) rather than living inline in the source. See the kit's
+// degraded-mode docs and tailwind.css for the html.legacy styling.
 
 // 1. Vendor the Bun-managed webfonts into ./assets before copying.
 await syncFonts()
@@ -31,7 +32,8 @@ await syncFonts()
 // the page shell. Sources are never minified in place.
 await rm(DIST, { recursive: true, force: true })
 await mkdir(`${DIST}/static`, { recursive: true })
-// Create the output subdirs up front so Tailwind/esbuild never race an absent dir.
+// Create the output subdirs up front so Tailwind/the kit's bundler never race an
+// absent dir.
 await mkdir(`${DIST}/static/styles`, { recursive: true })
 await mkdir(`${DIST}/static/js`, { recursive: true })
 await cp('assets/static/fonts', `${DIST}/static/fonts`, { recursive: true })
@@ -63,12 +65,24 @@ if ((await tailwind.exited) !== 0) {
   console.error('✗ Tailwind build failed')
   process.exit(1)
 }
-await writeFile(cssOut, await processCss(await readFile(cssOut, 'utf8'), { flattenLayers: true, filename: cssOut }))
+try {
+  await writeFile(cssOut, await processCss(await readFile(cssOut, 'utf8'), { flattenLayers: true, filename: cssOut }))
+} catch (error) {
+  console.error(`✗ CSS build failed (${cssOut})`)
+  console.error(error)
+  process.exit(1)
+}
 console.log(`✓ CSS: ${cssOut}`)
 
 // 4. Client TS -> the kit's bundler (self-contained IIFE at the floor's syntax
 // level), so the output stays a classic script loadable from a plain <script>.
-await bundleJs('assets/static/js/main.ts', `${DIST}/static/js/main.js`)
+try {
+  await bundleJs('assets/static/js/main.ts', `${DIST}/static/js/main.js`)
+} catch (error) {
+  console.error('✗ JS build failed')
+  console.error(error)
+  process.exit(1)
+}
 console.log(`✓ JS: ${DIST}/static/js/main.js`)
 
 // 5. Cache-busting: hash every asset whose URL carries the ?v= token — the JS,
