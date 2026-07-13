@@ -1,6 +1,6 @@
-// Browser entry. esbuild bundles this (inlining ./events) into a self-contained
-// classic script with no exports, so it loads from a plain <script>. Keep it
-// export-free and free of top-level await.
+// Browser entry. @screenly-labs/signage-kit bundles this (inlining ./events)
+// into a self-contained classic script with no exports, so it loads from a
+// plain <script>. Keep it export-free and free of top-level await.
 //
 // Flow: read today's local date → fetch the Wikipedia "On this day" feed → pick
 // an event (preferring one with an image) → render. If the live fetch fails
@@ -9,7 +9,7 @@
 
 // Side-effect import: installs the replaceChildren shim for the older-browser
 // degraded mode. Must stay first so the shim is in place before any render.
-import './polyfills'
+import '@screenly-labs/signage-kit/polyfills'
 import {
   type OnThisDayEvent,
   MONTHS_LONG,
