@@ -20,7 +20,10 @@
         dataLayer.push(arguments)
       }
       gtag('js', new Date())
-      gtag('config', 'G-04MFF4JJ4P')
+      // The automatic page view is suppressed because it fires before main.js can
+      // profile the player, so it would carry no player fields. trackPlayer sends it
+      // instead, once the profile is known (sendPageView: true). Set both or neither.
+      gtag('config', 'G-04MFF4JJ4P', { send_page_view: false })
     </script>
     <link
       rel="preload"
