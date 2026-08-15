@@ -128,7 +128,7 @@ const init = (): void => {
   // Report which player is showing this. A static app can only profile from the
   // user agent and referrer; the Worker apps additionally read X-Requested-With,
   // the only signal that names an Android WebView vendor.
-  trackPlayer(detectPlayer(), { app: 'on-this-day' })
+  trackPlayer(detectPlayer(), { app: 'on-this-day', sendPageView: true })
   const today = new Date()
   loadEvent(today).then((event) => render(event, today))
 }
